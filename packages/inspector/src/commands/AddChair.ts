@@ -11,9 +11,10 @@ class AddChair implements IMenuCommand<void> {
   async execute(): Promise<void> {
     const node = await this.context.sdk.sdk.Scene.createNode();
     node.name = 'New Model';
+    let url = window.prompt('Enter model url', cdnUrl + '/models/arm-chair/2/scene.gltf')
     node.addComponent('mp.gltfLoader', {
-      url: cdnUrl + '/models/arm-chair/2/scene.gltf',
-      localScale: { x: 0.001, y: 0.001, z: 0.001 },
+      url: url,
+      localScale: { x: 1.001, y: 1.001, z: 1.001 },
       localPosition: { x: -0.27, y: -0.51, z: -0.35 },
       localRotation: { x: 0, y: -130, z: 0 },
     });

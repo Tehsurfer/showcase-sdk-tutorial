@@ -49,7 +49,7 @@ export const Menus: MenuDescriptor[] = [
     label: 'Add',
     items: [
       {
-        title: 'Chair',
+        title: 'GLTF object',
         factoryMaker: makeAddChairFactory,
       },
       {
