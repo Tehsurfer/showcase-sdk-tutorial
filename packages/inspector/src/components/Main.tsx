@@ -4,6 +4,7 @@ import { SceneNodeView } from './SceneNodeView';
 import { FrameView } from './Frame';
 import { Selection, TransformToolbar } from './TransformToolbar';
 import { SceneDropZone } from './SceneDropZone';
+import { ModelDropZone } from './ModelDropZone';
 import {
   ISceneNode,
   IComponentEventSpy,
@@ -128,7 +129,8 @@ class MainViewImpl extends Component<Props, State> {
     this.itemDoubleClick = this.itemDoubleClick.bind(this);
     this.itemDeleted = this.itemDeleted.bind(this);
     this.transformSelected = this.transformSelected.bind(this);
-    this.dropped = this.dropped.bind(this);
+    this.sceneDropped = this.sceneDropped.bind(this);
+    this.modelDropped = this.modelDropped.bind(this);
     this.onSave = this.onSave.bind(this);
     this.onTabChanged = this.onTabChanged.bind(this);
   }
@@ -180,8 +182,21 @@ class MainViewImpl extends Component<Props, State> {
     this.context.scene.widget.inputs.mode = selection;
   }
 
-  private async dropped(objects: string) {
+  private async sceneDropped(objects: string) {
     await this.context.scene.deserialize(objects);
+  }
+
+  private async modelDropped(url: string) {
+    const node = await this.context.sdk.sdk.Scene.createNode();
+    node.name = 'New Model';
+    node.addComponent('mp.gltfLoader', {
+      url: url,
+      localScale: { x: 1.001, y: 1.001, z: 1.001 },
+      localPosition: { x: -0.27, y: -0.51, z: -0.35 },
+      localRotation: { x: 0, y: -130, z: 0 },
+    });
+    node.start();
+    this.context.scene.addObject(node);
   }
 
   private async onSave() {
@@ -299,7 +314,8 @@ class MainViewImpl extends Component<Props, State> {
           <div className={classes.wrapper}>
             <div className={classes.toolbar}>
               <TransformToolbar selectionChanged={this.transformSelected}></TransformToolbar>
-              <SceneDropZone cb={this.dropped}></SceneDropZone>
+              <SceneDropZone cb={this.sceneDropped}></SceneDropZone>
+              <ModelDropZone cb={this.modelDropped}></ModelDropZone>
               <Button onClick={() => this.onSave()} className={classes.button} variant="contained">
                 Save Scene
               </Button>

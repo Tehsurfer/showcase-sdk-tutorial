@@ -28,36 +28,33 @@ interface Props extends WithStyles<typeof styles> {
   cb: (serialized: string) => void;
 }
 
-class SceneDropZoneImpl extends Component<Props> {
+class ModelDropZoneImpl extends Component<Props> {
   constructor(props: Props) {
     super(props);
 
-    this.onDropHandler = this.onDropHandler.bind(this);
+    this.onModelHandler = this.onModelHandler.bind(this);
   }
 
-  private onDropHandler(acceptedFiles: File[]) {
-    const reader = new FileReader();
-    reader.onload = async () => {
-      console.log(reader.result);
-      this.props.cb(reader.result as string);
-    };
+  private onModelHandler(acceptedFiles: File[]) {
 
-    reader.readAsText(acceptedFiles[0]);
+    let url = URL.createObjectURL(acceptedFiles[0])
+    console.log(url);
+    this.props.cb(url as string);
   };
 
   render() {
     const classes = this.props.classes;
     return (
       <div>
-        <Dropzone onDrop={this.onDropHandler}>
-        {({getRootProps, getInputProps}) => (
-          <section>
-            <div className={classes.root} {...getRootProps()}>
-              <input {...getInputProps()} />
-              <p className={classes.text}>Import scene files by dropping them here.</p>
-            </div>
-          </section>
-        )}
+      <Dropzone onDrop={this.onModelHandler}>
+      {({getRootProps, getInputProps}) => (
+        <section>
+          <div className={classes.root} {...getRootProps()}>
+            <input {...getInputProps()} />
+            <p className={classes.text}>Import object files by dropping them here.</p>
+          </div>
+        </section>
+      )}
       </Dropzone>
      </div>
       
@@ -65,4 +62,4 @@ class SceneDropZoneImpl extends Component<Props> {
   }
 }
 
-export const SceneDropZone = withStyles(styles, { withTheme: true })(SceneDropZoneImpl);
+export const ModelDropZone = withStyles(styles, { withTheme: true })(ModelDropZoneImpl);
