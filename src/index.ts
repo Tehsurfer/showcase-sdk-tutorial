@@ -1,4 +1,6 @@
 const showcase = document.getElementById('showcase') as HTMLIFrameElement;
+const loadSceneButton = document.getElementById('scene-loader') as HTMLButtonElement
+const sceneText = document.getElementById('scene-text') as HTMLInputElement
 const key = 'u3qakhenu1kskfr12s9sg57gc';
 
 // declare this file is a module
@@ -13,6 +15,8 @@ declare global {
 
 
 
+
+
 showcase.addEventListener('load', async function() {
   let sdk;
   try {
@@ -23,12 +27,20 @@ showcase.addEventListener('load', async function() {
     return;
   }
 
+  loadSceneButton.onclick = async function(){
+    const models = await sdk.Scene.deserialize(sceneText.value);
+    for( let i in models){
+      models[i].start()
+    }
+  }
+
   console.log('%c  Hello Bundle SDK! ', 'background: #333333; color: #00dd00');
   console.log(sdk);
   const lights = await sdk.Scene.createNode();
   lights.addComponent('mp.lights');
   lights.start();
   const modelNode = await sdk.Scene.createNode();
+  (window as any).sdk = sdk
 
   // Store the fbx component since we will need to adjust it in the next step.
   const fbxComponent = modelNode.addComponent(sdk.Scene.Component.FBX_LOADER, {
@@ -45,7 +57,7 @@ showcase.addEventListener('load', async function() {
   modelNode.start();
   const tick = function() {
     requestAnimationFrame(tick);
-    modelNode.obj3D.rotation.y += 0.00001;
+    modelNode.obj3D.rotation.y += 0.01;
   }
   tick();
   
