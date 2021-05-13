@@ -1,7 +1,9 @@
 const showcase = document.getElementById('showcase') as HTMLIFrameElement;
 const loadSceneButton = document.getElementById('scene-loader') as HTMLButtonElement
 const sceneText = document.getElementById('scene-text') as HTMLInputElement
-const key = 'u3qakhenu1kskfr12s9sg57gc';
+const lll = 'db4d6653-164a-4cfc-87d5-4f38e0756512'
+// const lll = process.env.matt
+// const lll = 'u3qakhenu1kskfr12s9sg57gc';
 
 // declare this file is a module
 export {};
@@ -20,7 +22,7 @@ declare global {
 showcase.addEventListener('load', async function() {
   let sdk;
   try {
-    sdk = await showcase.contentWindow.MP_SDK.connect(showcase, key, '3.6');
+    sdk = await showcase.contentWindow.MP_SDK.connect(showcase, lll, '3.6');
   }
   catch(e) {
     console.error(e);
